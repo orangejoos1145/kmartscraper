@@ -2,9 +2,9 @@ name: Daily Kmart Scrape
 
 on:
   schedule:
-    # Runs at 06:00 UTC, which is 7:00 PM NZT
+    # Runs at 06:00 UTC, which is 7:00 PM NZDT (Summer Time)
     - cron: '0 6 * * *'
-  workflow_dispatch: # Allows you to run it manually by clicking a button
+  workflow_dispatch: # Allows you to run it manually
 
 permissions:
   contents: write
@@ -26,11 +26,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # FIX: Added 'python' before the filename
+      # The FIX: Added 'python' before the filename
       - name: Run Scraper
         run: python v2sitescrape.py
 
-      # FIX: Added 'python' before the filename
+      # The FIX: Added 'python' before the filename
       - name: Run Site Generator
         run: python v2sitegen.py
 
@@ -38,7 +38,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
-          # These filenames must match what your scripts output
-          git add kmart_full_catalogue.csv index.html
+          # We add all files to ensure new CSV/HTML are saved
+          git add .
           git commit -m "Auto-update Kmart deals" || exit 0
           git push
