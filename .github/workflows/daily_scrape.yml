@@ -1,0 +1,41 @@
+name: Daily Kmart Scrape
+
+on:
+  schedule:
+    # Runs at 06:00 UTC, which is 7:00 PM NZDT (Daylight Savings)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allows you to click a button to run it manually
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Scraper
+        run: python main.py
+
+      - name: Run Site Generator
+        run: python kmart_sitegen.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add kmart_full_catalogue.csv kmart_deals_dashboard.html
+          git commit -m "Auto-update Kmart deals" || exit 0
+          git push
