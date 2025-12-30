@@ -27,10 +27,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Scraper
-        run: python main.py
+        run:  v2sitescrape.py
 
       - name: Run Site Generator
-        run: python kmart_sitegen.py
+        run: v2sitegen.py
 
       - name: Commit and Push changes
         run: |
